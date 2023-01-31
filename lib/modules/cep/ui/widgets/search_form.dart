@@ -4,6 +4,7 @@ import 'package:consulta_cep_app/modules/cep/infra/cep_repository_api.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../../domain/models/cep.dart';
 class SearchForm extends StatefulWidget {
   const SearchForm({super.key});
 
@@ -20,12 +21,12 @@ class SearchFormState extends State<SearchForm> {
   bool _loading = false;
   String? _result;
 
-@override
+  @override
   void initState() {
     super.initState();
   }
 
-   @override
+  @override
   void dispose() {
     super.dispose();
     inputCepController.clear();
@@ -61,16 +62,18 @@ class SearchFormState extends State<SearchForm> {
                 ),
                 Padding(
                   padding: const EdgeInsets.all(12),
-                  child: _loading ? const CircularProgressIndicator() : ElevatedButton(
-                    onPressed: () {
-                      if (_formKey.currentState!.validate()) {
-                          _buscarCep();
-                      }
-                    },
-                    child:  const Text('Consultar'),
-                  ),
+                  child: _loading
+                      ? const CircularProgressIndicator()
+                      : ElevatedButton(
+                          onPressed: () {
+                            if (_formKey.currentState!.validate()) {
+                              _buscarCep();
+                            }
+                          },
+                          child: const Text('Consultar'),
+                        ),
                 ),
-                _buildResultForm(),
+               _result == null ? Container() : _buildResultForm(),
               ],
             ),
           ),
@@ -93,16 +96,22 @@ class SearchFormState extends State<SearchForm> {
 
   void _procurandoCep(bool enable) {
     setState(() {
-      _result = enable ? '' : _result;
+      _result = _result;
       _loading = enable;
     });
   }
 
   Widget _buildResultForm() {
-    return Container(
-      padding: const EdgeInsets.only(top: 20.0),
-      child: Text(_result ?? ''),
+    return Center(
+      child: Card(
+        child: Padding(
+          padding: const EdgeInsets.all(18.0),
+          child: InkWell(
+            child: Text(_result.toString()),
+            
+          ),
+        ),
+      ),
     );
   }
-  
 }
