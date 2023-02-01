@@ -19,7 +19,7 @@ class CepFormattedWidget extends StatelessWidget {
           children: [
             Text( '${_result!.logradouro}, '),
             Text('${_result!.bairro}, '),
-            Text('${_result!.complemento}, '),
+            Text('${_result!.localidade}, '),
             Text('${_result!.uf}, '),
             Text('${_result!.ddd} '),
           ],
