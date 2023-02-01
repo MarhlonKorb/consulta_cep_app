@@ -1,10 +1,12 @@
 import 'package:brasil_fields/brasil_fields.dart';
 import 'package:consulta_cep_app/modules/cep/domain/services/cep_service.dart';
 import 'package:consulta_cep_app/modules/cep/infra/cep_repository_api.dart';
+import 'package:consulta_cep_app/modules/shared/validators/input_cep_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
 import '../../domain/models/cep.dart';
+import 'cep_formmated_widget.dart';
+
 class SearchForm extends StatefulWidget {
   const SearchForm({super.key});
 
@@ -19,7 +21,7 @@ class SearchFormState extends State<SearchForm> {
   final cepService = CepService(cepRepository: CepRepositoryApi());
   final inputCepController = TextEditingController();
   bool _loading = false;
-  String? _result;
+  Cep? _result;
 
   @override
   void initState() {
@@ -43,23 +45,17 @@ class SearchFormState extends State<SearchForm> {
             child: Column(
               children: <Widget>[
                 TextFormField(
-                  controller: inputCepController,
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: 'Cep',
-                  ),
-                  inputFormatters: [
-                    FilteringTextInputFormatter.digitsOnly,
-                    CepInputFormatter(),
-                  ],
-                  keyboardType: TextInputType.number,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Campo não pode estar vazio para consulta.';
-                    }
-                    return null;
-                  },
-                ),
+                    controller: inputCepController,
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: 'Cep',
+                    ),
+                    inputFormatters: [
+                      FilteringTextInputFormatter.digitsOnly,
+                      CepInputFormatter(),
+                    ],
+                    keyboardType: TextInputType.number,
+                    validator: (value) => InputCepValidator(value).execute()),
                 Padding(
                   padding: const EdgeInsets.all(12),
                   child: _loading
@@ -73,7 +69,7 @@ class SearchFormState extends State<SearchForm> {
                           child: const Text('Consultar'),
                         ),
                 ),
-               _result == null ? Container() : _buildResultForm(),
+                _result == null ? Container() : _buildResultForm(),
               ],
             ),
           ),
@@ -88,7 +84,7 @@ class SearchFormState extends State<SearchForm> {
     final cepEncontrado = await cepService.buscar(cep);
 
     setState(() {
-      _result = cepEncontrado.toJson();
+      _result = cepEncontrado;
     });
 
     _procurandoCep(false);
@@ -106,12 +102,10 @@ class SearchFormState extends State<SearchForm> {
       child: Card(
         child: Padding(
           padding: const EdgeInsets.all(18.0),
-          child: InkWell(
-            child: Text(_result.toString()),
-            
-          ),
+          child: CepFormattedWidget(result: _result),
         ),
       ),
     );
   }
 }
+
