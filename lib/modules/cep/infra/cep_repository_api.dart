@@ -8,8 +8,7 @@ class CepRepositoryApi implements ICepRepository {
   
   @override
   Future<Cep> buscar(String? cep) async {
-    final cepFormatado = formataCepOutput(cep);
-    final uri = Uri.parse('${Environment.apiUrl}/$cepFormatado/json/');
+    final uri = Uri.parse('${Environment.apiUrl}/$cep/json/');
 
      final response = await http.get(uri);
     if (response.statusCode == 200) {
