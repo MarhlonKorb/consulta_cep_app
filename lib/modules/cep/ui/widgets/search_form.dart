@@ -74,9 +74,9 @@ class SearchFormState extends State<SearchForm> {
                         ),
                 ),
                 _result == null
-                    ? const Text('Nenhum registro encontrado')
+                    ? const Text('Busque um cep')
                     : CardCepWidget(
-                        result: _result!.toMap(),
+                        resultadoBusca: _result!.toMap(),
                       ),
               ],
             ),

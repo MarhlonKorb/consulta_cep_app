@@ -7,23 +7,27 @@ class InputCepValidator extends IInputValidator {
 
   InputCepValidator(this.value);
 
-  _isValid() => value!.isNotEmpty && value != null;
-
-  _lenghValid() {
-    return formataCepOutput(value)!.length == 8;
+  @override
+  String? getMessageError() {
+    return getMessageError();
   }
 
-  @override
-  getMessageError() => 'Campo não pode estar vazio';
-
-  @override
-  String? execute() {
-    if (!_isValid()) {
+  String? _isValid() {
+    if (value!.isEmpty || value == null) {
+      getMessageError() => 'Campo não pode estar vazio';
       return getMessageError();
     }
     if (!_lenghValid()) {
-      return 'Quantidade de dígitos inválida.[8]';
+      getMessageError() => 'Quantidade de dígitos inválida.[8]';
+      return getMessageError();
     }
     return null;
+  }
+
+  bool _lenghValid() => formataCepOutput(value)!.length == 8;
+
+  @override
+  String? execute() {
+    return _isValid();
   }
 }
